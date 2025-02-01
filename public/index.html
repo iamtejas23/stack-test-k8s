@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Atlas Data Store</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .card {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                margin: 20px auto;
+            }
+            input, button {
+                width: calc(100% - 10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>MongoDB Atlas Data Store</h1>
+    <div class="container">
+        <input type="text" id="itemName" placeholder="Enter item name">
+        <button onclick="addItem()">Add Item</button>
+    </div>
+    <h2>Stored Items</h2>
+    <div id="itemsContainer"></div>
+    <script>
+        async function addItem() {
+            const itemName = document.getElementById("itemName").value;
+            if (!itemName) return alert("Please enter an item name");
+            const response = await fetch("/items", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: itemName }),
+            });
+            if (response.ok) { document.getElementById("itemName").value = ""; fetchItems(); }
+        }
+        async function fetchItems() {
+            const response = await fetch("/items");
+            const items = await response.json();
+            const container = document.getElementById("itemsContainer");
+            container.innerHTML = "";
+            items.forEach(item => {
+                const div = document.createElement("div");
+                div.className = "card";
+                div.textContent = item.name;
+                container.appendChild(div);
+            });
+        }
+        fetchItems();
+    </script>
+</body>
+</html>
