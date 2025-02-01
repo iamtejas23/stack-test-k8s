@@ -1,42 +1,33 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: stack-test-deployment
   labels:
-    app: stack-test
+    app: stack-app
+  name: stack-deploy
 spec:
-  replicas: 2  # Adjust based on load
+  replicas: 3
   selector:
     matchLabels:
-      app: stack-test
+      app: stack-app
   template:
     metadata:
       labels:
-        app: stack-test
+        app: stack-app
     spec:
       containers:
-        - name: stack-test-container
-          image: iamtejas23/stack-test-k8s:latest  # Make sure to push this image to Docker Hub
-          ports:
-            - containerPort: 3000
-          resources:
-            requests:
-              cpu: "100m"
-              memory: "128Mi"
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
+      - name: cont1
+        image: iamtejas23/stack-test-k8s:latest
+        ports:
+          - containerPort: 3000
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: stack-test-service
+  name: stack-service
 spec:
-  type: LoadBalancer  # Expose the service externally
+  type: LoadBalancer
   selector:
-    app: stack-test
+    app: stack-app
   ports:
-    - protocol: TCP
-      port: 3000  # Exposed port
-      targetPort: 3000  # Port inside the container
+    - port: 3000
+      targetPort: 3000
