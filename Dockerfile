@@ -20,4 +20,4 @@ EXPOSE 3000
 ENV NODE_ENV production
 
 # Run the application
-CMD ["node", "app.js"]
+CMD ["node", "server.js"]
